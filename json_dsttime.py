@@ -39,36 +39,48 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 class MainPage(webapp.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/javascript'
-        dt = self.request.get('dt', default_value=datetime.now().isoformat())
-        tz = self.request.get('tz', default_value='UTC')
-        data = json_dsttime(dt, tz)
+        dt = self.request.get('dt', 
+            default_value=datetime.utcnow().isoformat())
+        awaytz = self.request.get('to_tz', default_value='UTC')
+        hometz = self.request.get('from_tz', default_value='UTC')
+        data = json_dsttime(dt, awaytz, hometz)
         self.response.out.write(json.dumps(data))
 
-def json_dsttime(isotime, tz='UTC'):
+def json_dsttime(isotime, awaytz='UTC', hometz='UTC'):
     error = None
     try:
-        tz = timezone(tz)
+        awaytz = timezone(awaytz)
     except pytz.UnknownTimeZoneError:
         return { '_dt': isotime, 'error': u'Unknown timezone provided.' }
 
+    try:
+        hometz = timezone(hometz)
+    except pytz.UnknownTimeZoneError:
+        return { '_dt': isotime, 'error': u'Unknown home timezone provided.' }
+
     zulu = timezone('UTC')
     parsed = parse(isotime)
-    utc = parsed.utctimetuple()
+    hometime = parsed.timetuple()
     format = "%Y-%m-%dT%H:%M:%S"
     formatz = "%Y-%m-%dT%H:%M:%S%Z"
     try:
-        utc = datetime.strptime(time.strftime(formatz, utc), formatz)
+        hometime = datetime.strptime(
+            time.strftime(formatz, hometime), formatz)
     except ValueError:
-        utc = datetime.strptime(time.strftime(format, utc), format)
+        hometime = datetime.strptime(
+            time.strftime(format, hometime), format)
 
-    utc = zulu.localize(utc)
-    local = utc.astimezone(tz)
-    is_dst = local.dst().seconds > 0
+    homedt = hometz.localize(hometime)
+    awaydt = homedt.astimezone(awaytz)
+    utc = homedt.astimezone(zulu)
+    is_dst = awaydt.dst().seconds > 0
 
-    json = { 'hour': local.hour, 'second': local.second,
-        'minute': local.minute, 'day': local.day, 'month': local.month,
-        'year': local.year, '_dt': isotime, 'local': local.isoformat(),
-        'utc': utc.isoformat(), '_tz': tz.zone, 'dst': is_dst
+    json = { 'hour': awaydt.hour, 'second': awaydt.second,
+        'minute': awaydt.minute, 'day': awaydt.day, 'month': awaydt.month,
+        'year': awaydt.year, '_dt': isotime, 'homedt': homedt.isoformat(),
+        'awaydt': awaydt.isoformat(), 'utc': utc.isoformat(), 
+        '_totz': awaytz.zone, '_fromtz': hometz.zone,
+        'dst': is_dst
     }
     return json
 

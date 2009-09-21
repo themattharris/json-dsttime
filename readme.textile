@@ -12,8 +12,9 @@ h2. Arguments
 h2. Examples
 
 # query @http://json-dsttime.appspot.com@ to get the current datetime in utc
-# query @http://json-dsttime.appspot.com?tz=Europe/London@ to get the current datetime in the Europe/London timezone
-# query @http://json-dsttime.appspot.com?tz=Europe/London&dt=2009-09-21T10:00@ to get the localized datetime for Europe/London at 10am on 21 September 2009
+# query @http://json-dsttime.appspot.com?to_tz=Europe/London@ to get the current datetime in the Europe/London timezone
+# query @http://json-dsttime.appspot.com?to_tz=Europe/London&dt=2009-09-21T10:00@ to get the localized datetime for Europe/London at 10am on 21 September 2009
+# query @http://json-dsttime.appspot.com?to_tz=Europe/London&from_tz=US/Pacific&dt=10:00@ to find out what time 10am today in US/Pacific is in Europe
 
 h2. General Notes
 
