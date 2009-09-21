@@ -2,6 +2,8 @@ h1. JSON DST Time
 
 Google App Engine project returns the UTC and localized datetime object as JSON for a given datetime and timezone. The response includes whether the timezone was observing daylight savings on the date queried.
 
+Idea spawned from Simon Willison's json-time http://github.com/simonw/json-time/
+
 h2. Arguments
 
 *tz* the Orson recognised timezone. e.g. EDT or Europe/London. Case is important!
