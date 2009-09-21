@@ -1,0 +1,8 @@
+application: json-dsttime
+version: 1
+runtime: python
+api_version: 1
+
+handlers:
+- url: /.*
+  script: json_dsttime.py

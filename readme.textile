@@ -1,0 +1,23 @@
+h1. JSON DST Time
+
+Google App Engine project returns the UTC and localized datetime object as JSON for a given datetime and timezone. The response includes whether the timezone was observing daylight savings on the date queried.
+
+h2. Arguments
+
+*tz* the Orson recognised timezone. e.g. EDT or Europe/London. Case is important!
+*dt* the datestring to be processed
+
+h2. Examples
+
+# query @http://json-dsttime.appspot.com@ to get the current datetime in utc
+# query @http://json-dsttime.appspot.com?tz=Europe/London@ to get the current datetime in the Europe/London timezone
+# query @http://json-dsttime.appspot.com?tz=Europe/London&dt=2009-09-21T10:00@ to get the localized datetime for Europe/London at 10am on 21 September 2009
+
+h2. General Notes
+
+This is alpha 1 thrown together in a couple of hours to learn how App Engine works. There's probably a couple of things which could go wrong that I haven't trapped for yet. If you find any add them to the issues page and i'll fix them up.
+
+h2. License
+
+Twitter Archiver is licensed under the terms of the MIT License, see 
+the included MIT-LICENSE file.
