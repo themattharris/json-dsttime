@@ -6,7 +6,7 @@ Idea spawned from Simon Willison's json-time http://github.com/simonw/json-time/
 
 h2. Arguments
 
-*tz* the Orson recognised timezone. e.g. EDT or Europe/London. Case is important!
+*tz* the Olson recognised timezone. e.g. EDT or Europe/London. Case is important!
 *dt* the datestring to be processed
 
 h2. Examples
