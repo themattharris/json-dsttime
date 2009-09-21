@@ -55,9 +55,14 @@ def json_dsttime(isotime, tz='UTC'):
     parsed = parse(isotime)
     utc = parsed.utctimetuple()
     format = "%Y-%m-%dT%H:%M:%S"
-    utc = datetime.strptime(time.strftime(format, utc), format)
-    local = tz.localize(utc)
+    formatz = "%Y-%m-%dT%H:%M:%S%Z"
+    try:
+        utc = datetime.strptime(time.strftime(formatz, utc), formatz)
+    except ValueError:
+        utc = datetime.strptime(time.strftime(format, utc), format)
+
     utc = zulu.localize(utc)
+    local = utc.astimezone(tz)
     is_dst = local.dst().seconds > 0
 
     json = { 'hour': local.hour, 'second': local.second,
